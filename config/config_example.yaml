@@ -15,7 +15,6 @@ project_name: MyData
 # Clustering parameters
 resolution: 0.6
 
-
 ##### DEA #####
 
 # parameters for https://satijalab.org/seurat/reference/findmarkers

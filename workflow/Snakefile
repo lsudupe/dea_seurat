@@ -18,20 +18,23 @@ shell.prefix(f"set -eo pipefail;")
 report: os.path.join("report", "workflow.rst")
 
 ##### load config and sample annotation sheets #####
-configfile: "config/config_example.yaml"
+configfile: "/Users/medinils/Desktop/dea_seurat/config/config_example.yaml"
 
 # load annotation
-annot = pd.read_csv("config/annotation_example.csv", index_col='name')
-analyses = list(annot.index)
-# convert dictionary for parametrization of rules
-annot_dict = annot.to_dict('index')
+annotation_path = "/Users/medinils/Desktop/dea_seurat/config/annotation_example.csv"
+df_annotation = pd.read_csv(annotation_path)
+
+data_paths = {row['name']: row['data'] for index, row in df_annotation.iterrows()}
 
 result_path = "results/"
 
 rule all:
     input:
-        dea_results = expand("{result_path}/{analysis}/DEA_results.csv", result_path=result_path, analysis=analyses),
-        updated_seurat_objects = expand("{result_path}/{analysis}/updated_seurat_object.rds", result_path=result_path, analysis=analyses),
+        expand("results/{analysis}/processed_data.rds",analysis=df_annotation['name']),
+        dea_results=expand(os.path.join(result_path,'{analysis}','DEA_results.csv'),analysis=analyses),
+        updated_seurat_objects=expand(os.path.join(result_path,'{analysis}','updated_seurat_object.rds'),analysis=analyses),
+        clustering_plots=expand(os.path.join(result_path,'{analysis}','clustering_plot_{resolution}.pdf'),analysis=analyses,resolution=
+        config["resolution"]),
         dea_volcanos = expand(os.path.join(result_path,'{analysis}','plots','DEA_volcanos.png'),
                             analysis = analyses,
                            ),

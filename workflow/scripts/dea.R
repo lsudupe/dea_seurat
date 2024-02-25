@@ -139,8 +139,7 @@ if (control=="ALL"){
 clustering_plot <- DimPlot(data, group.by = 'seurat_clusters', label = TRUE) + NoLegend()
 
 # Add resolution to the plot title
-resolution_value <- snakemake@params[["resolution"]]
-plot_title <- paste("Clustering Plot with", resolution_value, "Resolution")
+plot_title <- paste("Clustering Plot with", resolution, "Resolution")
 clustering_plot <- clustering_plot + ggtitle(plot_title)
 
 # Define the path for the clustering plot output

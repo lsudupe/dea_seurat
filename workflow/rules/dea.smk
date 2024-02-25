@@ -1,12 +1,33 @@
 
+rule process_data:
+    input:
+        lambda wildcards: f"/Users/medinils/Desktop/dea_seurat/test_data/{data_paths[wildcards.analysis]}"
+    output:
+        "results/{analysis}/processed_data.rds"
+    script:
+        "scripts/process_data.R"
+
+#rule clustering
+rule clustering:
+    input:
+        get_data_path
+    output:
+        clustering_plot = os.path.join(result_path, '{analysis}', 'clustering_plot_{resolution}.pdf'),
+        updated_seurat_object = os.path.join(result_path, '{analysis}', 'updated_seurat_object.rds')
+    params:
+        resolution = config["resolution"],
+    log:
+        os.path.join("logs", "{analysis}_clustering.log")
+    script:
+        "../scripts/dea.R"
+
 # perform differential expression analysis
 rule dea:
     input:
         get_data_path
     output:
         dea_results = os.path.join(result_path,'{analysis}','DEA_results.csv'),
-        clustering_plot= os.path.join(result_path,'{analysis}','clustering_plot_{resolution}.pdf'),
-        updated_seurat_object= os.path.join(result_path,'{analysis}','updated_seurat_object.rds')
+
     resources:
         mem_mb=config.get("mem", "16000"),
     threads: config.get("threads", 1)
@@ -15,7 +36,6 @@ rule dea:
     log:
         os.path.join("logs","rules","dea_{analysis}.log"),
     params:
-        resolution = config["resolution"], ##cluster resolution
         partition=config.get("partition"),
         assay = lambda w: annot_dict["{}".format(w.analysis)]["assay"],
         metadata = lambda w: annot_dict["{}".format(w.analysis)]["metadata"],

@@ -7,8 +7,8 @@ threads: 2
 partition: 'shortq'
 
 ##### GENERAL #####
-annotation: /path/to/MyData_dea_seurat_annotation.csv
-result_path: /path/to/result/directory/
+annotation: /Users/medinils/Desktop/dea_seurat/annotation_example.csv
+result_path: /Users/medinils/Desktop/dea_seurat/results/
 project_name: MyData
 
 ##### CLUSTERING #####

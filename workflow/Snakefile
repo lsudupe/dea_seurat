@@ -18,23 +18,20 @@ shell.prefix(f"set -eo pipefail;")
 report: os.path.join("report", "workflow.rst")
 
 ##### load config and sample annotation sheets #####
-configfile: "/Users/medinils/Desktop/dea_seurat/config/config_example.yaml"
+configfile: "config/config_example.yaml"
 
 # load annotation
-annot = pd.read_csv(config['annotation'], index_col='name')
+annot = pd.read_csv("config/annotation_example.csv", index_col='name')
 analyses = list(annot.index)
 # convert dictionary for parametrization of rules
 annot_dict = annot.to_dict('index')
 
-result_path = os.path.join(config["result_path"],'dea_seurat')
+result_path = "results/"
 
 rule all:
     input:
-        dea_results = expand(os.path.join(result_path,'{analysis}','DEA_results.csv'),
-                            analysis = analyses,
-                           ),
-        updated_seurat_objects= expand(os.path.join(result_path,'{analysis}','updated_seurat_object.rds'),
-        analysis=analyses),
+        dea_results = expand("{result_path}/{analysis}/DEA_results.csv", result_path=result_path, analysis=analyses),
+        updated_seurat_objects = expand("{result_path}/{analysis}/updated_seurat_object.rds", result_path=result_path, analysis=analyses),
         dea_volcanos = expand(os.path.join(result_path,'{analysis}','plots','DEA_volcanos.png'),
                             analysis = analyses,
                            ),

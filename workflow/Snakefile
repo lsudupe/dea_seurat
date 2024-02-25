@@ -18,7 +18,7 @@ shell.prefix(f"set -eo pipefail;")
 report: os.path.join("report", "workflow.rst")
 
 ##### load config and sample annotation sheets #####
-configfile: os.path.join("config", "config.yaml")
+configfile: os.path.join("config", "config_example.yaml")
 
 # load annotation
 annot = pd.read_csv(config['annotation'], index_col='name')
@@ -33,6 +33,8 @@ rule all:
         dea_results = expand(os.path.join(result_path,'{analysis}','DEA_results.csv'),
                             analysis = analyses,
                            ),
+        updated_seurat_objects= expand(os.path.join(result_path,'{analysis}','updated_seurat_object.rds'),
+        analysis=analyses),
         dea_volcanos = expand(os.path.join(result_path,'{analysis}','plots','DEA_volcanos.png'),
                             analysis = analyses,
                            ),

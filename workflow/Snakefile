@@ -18,7 +18,7 @@ shell.prefix(f"set -eo pipefail;")
 report: os.path.join("report", "workflow.rst")
 
 ##### load config and sample annotation sheets #####
-configfile: os.path.join("config", "config_example.yaml")
+configfile: "/Users/medinils/Desktop/dea_seurat/config/config_example.yaml"
 
 # load annotation
 annot = pd.read_csv(config['annotation'], index_col='name')
